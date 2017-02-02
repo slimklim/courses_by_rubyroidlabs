@@ -1,0 +1,32 @@
+#!/usr/bin/env ruby
+
+Dir["lib/*.rb"].each { |f| require_relative(f) }
+require "thor"
+
+
+class GrepCLI < Thor
+
+  desc 'search str file_names', 'Search string in file (possible to combine options).'
+  method_option :around_str, type: :numeric, aliases: '-A',
+    desc: 'Additional output specified number of rows before and after the matched string.'
+  method_option :reg_ex, type: :boolean, aliases: '-e',
+    desc: 'Enter regular expressions instead of just part of a string.'
+  method_option :rekurs, type: :boolean, aliases: '-R',
+    desc: 'Recursively search all files in the folder, instead of the search string in the specified files.'
+  method_option :zip, type: :boolean, aliases: '-z',
+    desc: 'Files are compressed.'
+  def search(str, *file_names)
+    filenames = []
+    file_names.each { |f| File.file?(f) ?
+      filenames << f : puts("The file '#{f}' doesn't exist or isn't a file.".yellow_on_red) }
+
+    files = FilesSelector.new(filenames, options)
+    grep = Searcher.new(str, files.selected, options)
+    puts grep.search
+
+  end
+
+end
+
+
+GrepCLI.start

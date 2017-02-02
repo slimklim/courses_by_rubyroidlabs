@@ -1,0 +1,39 @@
+.squared {
+  width: 22px;
+  height: 22px;
+  position: relative;
+}
+
+td.squared {
+  min-width: 22px;
+}
+
+.squared label {
+  cursor: pointer;
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  left: 0;
+  top: 0;
+  background: #dd0000;
+  margin: 0;
+}
+
+.squared label:after {
+  opacity: 0;
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background: #00bf00;
+  top: 0;
+  left: 0;
+}
+
+.squared label:hover::after {
+  opacity: 0.5;
+}
+
+.squared input[type=checkbox]:checked + label:after {
+  opacity: 1;
+}

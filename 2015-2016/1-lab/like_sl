@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby
+
+Dir["lib/*.rb"].each { |f| require_relative(f) }
+
+trex = Trex.new
+trex.gogo(timer = 0.15)

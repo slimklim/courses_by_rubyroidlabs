@@ -1,0 +1,20 @@
+#!/usr/bin/env ruby
+
+Dir["lib/*.rb"].each { |f| require_relative(f) }
+require "thor"
+
+class BsuirReviewsCLI < Thor
+
+  desc 'show group_number', 'Show reviews about the teachers of the group.'
+  def show(group_number)
+    teachers = TeachersParser.new.pull(group_number)
+    teacher_with_comments = CommentsParser.new.pull(teachers)
+    Printer.new.print(teacher_with_comments)
+  rescue SocketError
+    puts "No network connection."
+  end
+
+end
+
+
+BsuirReviewsCLI.start

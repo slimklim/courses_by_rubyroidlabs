@@ -1,0 +1,10 @@
+#!/usr/bin/env ruby
+
+Dir["lib/*.rb"].each { |f| require_relative(f) }
+
+begin
+glider = GameLife.new
+glider.in_loop(timer: 0.05)
+rescue RuntimeError => err
+  puts err
+end

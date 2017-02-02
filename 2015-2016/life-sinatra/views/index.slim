@@ -1,0 +1,66 @@
+doctype html
+html
+  head
+    meta charset="utf-8"
+    meta http-equiv="X-UA-Compatible" content="IE=edge"
+    meta name="viewport" content="width=device-width, initial-scale=1"
+    link href="css/bootstrap.min.css" rel="stylesheet"
+    script src="js/html5shiv.min.js"
+    script src="js/respond.min.js"
+    link href='css/styles.css' rel='stylesheet'
+    title Web-Game Life
+
+  body
+    script src="js/jquery.min.js"
+    script src="js/bootstrap.min.js"
+
+    div class="container"
+      - if @space
+        div class="navbar navbar-default"
+          ul class="nav navbar-nav"
+            li
+              a href='/randomize' New random space
+            li
+              a href='/clear_space' Clear space
+            li
+              a href='/next_step'  Next step
+            li
+
+      div class="row"
+        div class="col-md-3 col-lg-3 col-xs-12 col-sm-12"
+
+          form action='/set_size' method='post'
+            p
+              input type='number' class="form-control" min='4' max='40' placeholder='Cols' name='cols'
+            p
+              input type='number' class="form-control" min='4' max='40' placeholder='Rows' name='rows'
+            input type='submit' class="btn btn-info" value='Set size'
+            - if @space
+              input type='submit' class="btn btn-info" value='Set space' title='Use the space that you have chosen' form='setSpace' style='float: right'
+          br
+
+          form action='/load_file' method='post' enctype='multipart/form-data'
+            p
+              label class="btn btn-default btn-file"
+                |
+                  Choose File for import
+                input type="file" name='file' style="display: none;"
+              input type='submit' class="btn btn-info" value='Load File' style='float: right'
+
+        div class="col-md-9 col-lg-9 col-xs-12 col-sm-12 game" id='game'
+          - if @space
+            form action='/set_space' method='post' id='setSpace'
+              table
+                - for j in 0...@rows do
+                  div
+                    tr
+                    - for i in 0...@cols do
+                      - if @space[i][j] == '*'
+                        td class='squared'
+                          input type='checkbox' checked='checked' name='#{i}x#{j}' id='squared-#{i}x#{j}'
+                          label for='squared-#{i}x#{j}'
+                      - else
+                        td class='squared'
+                          input type='checkbox' name='#{i}x#{j}' id='squared-#{i}x#{j}'
+                          label for='squared-#{i}x#{j}'
+

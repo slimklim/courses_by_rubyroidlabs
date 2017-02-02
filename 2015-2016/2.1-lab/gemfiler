@@ -1,0 +1,60 @@
+#!/usr/bin/env ruby
+
+# Most of the version specifiers, like >= 1.0, are self-explanatory.
+# The specifier ~> has a special meaning, best shown by example.
+# ~> 2.0.3 is identical to >= 2.0.3 and < 2.1. ~> 2.1 is identical to >= 2.1 and < 3.0.
+# ~> 2.2.beta will match prerelease versions like 2.2.beta.12.
+
+Dir["lib/*.rb"].each { |f| require_relative(f) }
+require "thor"
+
+class GemfilerCLI < Thor
+
+  FOR_EXAMPLE = ["For example:", "'~> 2.1.3'", "'>= 3.1'", "'>= 3.1 < 4.0'"]
+
+  desc "versions gem_name option_1 option_2", "Get versions of gems"
+  long_desc <<-LONGDESC
+    Without options - get all versions of gems.
+    \x5With options - get filtered versions of gems. #{FOR_EXAMPLE.join("\x5")}
+  LONGDESC
+  def versions(gem_name, option_1 = nil, option_2 = nil)
+    gems_versions = GemInfo.new(gem_name)
+    if option_1
+      options = [option_1.split]
+      options << option_2.split if option_2
+      check_format(options)
+      puts "Versions of gem '#{gem_name}', which #{option_1}#{" and #{option_2}" if option_2}:".yellow
+      puts gems_versions.filter(options)
+    else
+      puts "All versions of gem '#{gem_name}':".yellow
+      puts gems_versions.all_versions
+    end
+  rescue ArgumentError => err
+    puts err.to_s.red
+  end
+
+  no_commands do
+    def check_format(options)
+      message = "Incorrect options for versions filter.\n#{FOR_EXAMPLE.join("\n")}"
+
+      options.each do |option|
+        unless (((/\A(>=|>|<|<=|~>)\Z/ === option[0]) & (/\A([0-9]+\.)*[0-9]+\Z/ === option[1])) ||
+        ((/\A(~>)\Z/ === option[0]) & (/\A([0-9]+\.)+(beta)\Z/ === option[1])))
+          raise ArgumentError.new(message)
+        end
+      end
+    end
+  end
+
+end
+
+
+
+
+GemfilerCLI.start
+
+
+
+
+
+

@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+Dir["lib/*.rb"].each { |f| require_relative(f) }
+
+calc = PolishCalculator.new
+calc.run

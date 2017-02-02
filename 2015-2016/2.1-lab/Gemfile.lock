@@ -1,0 +1,17 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    colored (1.2)
+    gems (0.8.3)
+    thor (0.19.1)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  colored
+  gems
+  thor
+
+BUNDLED WITH
+   1.11.2
